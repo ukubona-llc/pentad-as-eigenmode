@@ -1,0 +1,1 @@
+# pentad-as-eigenmode
