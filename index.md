@@ -1,6 +1,8 @@
-[![Jensen Huang · Stanford Entrepreneurial Thought Leaders](https://img.youtube.com/vi/Xn1EsFe7snQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=Xn1EsFe7snQ)
-
-*Jensen Huang · Stanford ETL · 2011 · "the search part of it is a commodity"*
+ <iframe
+    src="https://www.youtube.com/embed/Xn1EsFe7snQ"
+    style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+    allowfullscreen
+  ></iframe>
 
 ---
 
