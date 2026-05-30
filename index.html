@@ -1,131 +1,245 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Icons -->
     <link rel="icon" href="https://abikesa.github.io/favicon/assets/favicon-light.ico" />
     <link rel="icon" href="https://abikesa.github.io/favicon/assets/favicon-dark.ico"
           media="(prefers-color-scheme: dark)" />
-
-    <!-- Logo preloads -->
     <link rel="preload" href="https://abikesa.github.io/logos/assets/ukubona-light.png" as="image" />
     <link rel="preload" href="https://abikesa.github.io/logos/assets/ukubona-dark.png" as="image" />
 
 <title>Ukubona · UGOAX Roundtable</title>
 <style>
+  /* ── THEME TOKENS ───────────────────────────────────────────── */
+  :root,
+  [data-theme="dark"] {
+    --bg:          #0d0d0d;
+    --bg-code:     #111118;
+    --bg-thead:    #16161d;
+    --bg-quote:    rgba(185,142,228,0.06);
+    --bg-tr-hover: rgba(255,255,255,0.015);
+    --bg-code-tag: rgba(185,142,228,0.08);
+
+    --text:        #ccc8dc;
+    --text-h1:     #f0ecff;
+    --text-h2:     #d9baff;
+    --text-h3:     #b98ee4;
+    --text-em:     #d9baff;
+    --text-strong: #f0ecff;
+    --text-cite:   #7a6e99;
+    --text-footer: #4e4a62;
+    --text-th:     #7a6e99;
+
+    --accent:      #b98ee4;
+    --accent-mid:  rgba(185,142,228,0.18);
+    --accent-low:  rgba(185,142,228,0.07);
+
+    --border:      rgba(255,255,255,0.08);
+    --border-td:   rgba(255,255,255,0.05);
+    --border-pre:  rgba(255,255,255,0.07);
+
+    --link:        #b98ee4;
+
+    /* toggle pill */
+    --pill-bg:     rgba(185,142,228,0.10);
+    --pill-border: rgba(185,142,228,0.25);
+    --pill-text:   #b98ee4;
+    --pill-icon-off: #4e4a62;
+  }
+
+  [data-theme="light"] {
+    --bg:          #f7f5f0;
+    --bg-code:     #eeecf5;
+    --bg-thead:    #e9e6f0;
+    --bg-quote:    rgba(130,80,180,0.05);
+    --bg-tr-hover: rgba(0,0,0,0.018);
+    --bg-code-tag: rgba(130,80,180,0.07);
+
+    --text:        #3a3550;
+    --text-h1:     #1a1530;
+    --text-h2:     #5a3a8a;
+    --text-h3:     #7a4ab0;
+    --text-em:     #6040a0;
+    --text-strong: #1a1530;
+    --text-cite:   #9a90b8;
+    --text-footer: #b0aac8;
+    --text-th:     #8878b0;
+
+    --accent:      #7a4ab0;
+    --accent-mid:  rgba(130,80,180,0.20);
+    --accent-low:  rgba(130,80,180,0.07);
+
+    --border:      rgba(0,0,0,0.10);
+    --border-td:   rgba(0,0,0,0.06);
+    --border-pre:  rgba(0,0,0,0.08);
+
+    --link:        #7a4ab0;
+
+    --pill-bg:     rgba(130,80,180,0.08);
+    --pill-border: rgba(130,80,180,0.25);
+    --pill-text:   #7a4ab0;
+    --pill-icon-off: #b0a8c8;
+  }
+
+  /* ── RESET ───────────────────────────────────────────────────── */
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: Georgia, 'Times New Roman', serif;
-    background: #0d0d0d;
-    color: #ccc8dc;
+    background: var(--bg);
+    color: var(--text);
     line-height: 1.7;
     font-size: 16px;
+    transition: background 0.25s ease, color 0.25s ease;
   }
 
+  /* ── TOGGLE ──────────────────────────────────────────────────── */
+  .theme-toggle {
+    position: fixed;
+    top: 1.1rem;
+    right: 1.2rem;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--pill-bg);
+    border: 1px solid var(--pill-border);
+    border-radius: 99px;
+    padding: 0.32rem 0.75rem 0.32rem 0.55rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    user-select: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+  .theme-toggle:hover {
+    box-shadow: 0 3px 18px rgba(0,0,0,0.28);
+  }
+
+  .toggle-track {
+    width: 28px;
+    height: 16px;
+    border-radius: 8px;
+    background: var(--accent-mid);
+    border: 1px solid var(--accent-mid);
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: transform 0.22s cubic-bezier(.4,0,.2,1), background 0.2s;
+  }
+  [data-theme="light"] .toggle-thumb {
+    transform: translateX(12px);
+  }
+
+  .toggle-icon {
+    font-size: 0.78rem;
+    line-height: 1;
+  }
+  .icon-moon { color: var(--accent); }
+  .icon-sun  { color: var(--pill-icon-off); }
+  [data-theme="light"] .icon-moon { color: var(--pill-icon-off); }
+  [data-theme="light"] .icon-sun  { color: var(--accent); }
+
+  .toggle-label {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pill-text);
+    transition: color 0.2s;
+  }
+
+  /* ── LAYOUT ──────────────────────────────────────────────────── */
   .wrapper {
     max-width: 860px;
     margin: 0 auto;
     padding: 3rem 1.5rem 6rem;
   }
 
-  /* VIDEO */
-  /* VIDEO */
   .video-wrap {
     width: 70%;
     margin: 0 auto 2.5rem auto;
   }
-
   .video-wrap iframe {
     width: 100%;
     height: 500px;
     border: 0;
     display: block;
   }
-
   @media (max-width: 768px) {
-    .video-wrap {
-      width: 100%;
-    }
-
-    .video-wrap iframe {
-      height: 300px;
-    }
+    .video-wrap { width: 100%; }
+    .video-wrap iframe { height: 300px; }
   }
 
   hr {
     border: none;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid var(--border);
     margin: 2rem 0;
   }
 
-  /* HEADINGS */
+  /* ── HEADINGS ────────────────────────────────────────────────── */
   h1 {
     font-family: 'Palatino Linotype', Palatino, Georgia, serif;
     font-size: clamp(1.6rem, 4vw, 2.4rem);
     font-weight: 700;
-    color: #f0ecff;
+    color: var(--text-h1);
     margin: 2.5rem 0 1rem;
     line-height: 1.15;
   }
-
   h2 {
     font-family: 'Palatino Linotype', Palatino, Georgia, serif;
     font-size: clamp(1.2rem, 3vw, 1.6rem);
     font-weight: 400;
-    color: #d9baff;
+    color: var(--text-h2);
     margin: 2rem 0 0.8rem;
     line-height: 1.2;
   }
-
   h3 {
     font-family: Georgia, serif;
     font-size: 1.05rem;
     font-weight: 700;
-    color: #b98ee4;
+    color: var(--text-h3);
     margin: 1.6rem 0 0.5rem;
   }
 
-  /* PARAGRAPHS */
-  p {
-    margin-bottom: 1rem;
-    color: #ccc8dc;
-  }
+  /* ── BODY COPY ───────────────────────────────────────────────── */
+  p { margin-bottom: 1rem; color: var(--text); }
 
-  /* BLOCKQUOTE */
   blockquote {
-    border-left: 3px solid #b98ee4;
+    border-left: 3px solid var(--accent);
     margin: 1.2rem 0;
     padding: 0.6rem 1.2rem;
-    background: rgba(185,142,228,0.06);
+    background: var(--bg-quote);
     border-radius: 0 4px 4px 0;
   }
   blockquote p {
     font-style: italic;
-    color: #d9baff;
+    color: var(--text-h2);
     margin-bottom: 0.3rem;
   }
-  blockquote cite, blockquote p:last-child {
+  blockquote cite,
+  blockquote p:last-child {
     font-size: 0.85rem;
-    color: #7a6e99;
+    color: var(--text-cite);
     font-style: normal;
   }
 
-  /* LINKS */
-  a {
-    color: #b98ee4;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-    opacity: 0.8;
-  }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; opacity: 0.8; }
 
-  /* CODE BLOCKS */
+  /* ── CODE ────────────────────────────────────────────────────── */
   pre {
-    background: #111118;
-    border: 1px solid rgba(255,255,255,0.07);
+    background: var(--bg-code);
+    border: 1px solid var(--border-pre);
     border-radius: 4px;
     padding: 1rem 1.2rem;
     overflow-x: auto;
@@ -133,35 +247,28 @@
     font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
     font-size: 0.78rem;
     line-height: 1.55;
-    color: #a8a4c0;
+    color: var(--text);
+    transition: background 0.25s, border-color 0.25s;
   }
-
   code {
     font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
     font-size: 0.85em;
-    background: rgba(185,142,228,0.08);
+    background: var(--bg-code-tag);
     padding: 0.1em 0.35em;
     border-radius: 3px;
-    color: #d9baff;
+    color: var(--text-h2);
+    transition: background 0.25s;
   }
+  pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
 
-  pre code {
-    background: none;
-    padding: 0;
-    font-size: inherit;
-    color: inherit;
-  }
-
-  /* TABLES */
+  /* ── TABLES ──────────────────────────────────────────────────── */
   table {
     width: 100%;
     border-collapse: collapse;
     margin: 1.2rem 0;
     font-size: 0.88rem;
   }
-  thead tr {
-    background: #16161d;
-  }
+  thead tr { background: var(--bg-thead); transition: background 0.25s; }
   th {
     text-align: left;
     padding: 0.6rem 0.9rem;
@@ -169,65 +276,54 @@
     font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #7a6e99;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-th);
+    border-bottom: 1px solid var(--border);
     font-weight: 400;
   }
   td {
     padding: 0.65rem 0.9rem;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid var(--border-td);
     vertical-align: top;
-    color: #ccc8dc;
+    color: var(--text);
   }
-  tr:hover td {
-    background: rgba(255,255,255,0.015);
-  }
+  tr:hover td { background: var(--bg-tr-hover); }
 
-  /* STRONG / EM */
-  strong { color: #f0ecff; }
-  em { color: #d9baff; }
+  /* ── MISC ────────────────────────────────────────────────────── */
+  strong { color: var(--text-strong); }
+  em     { color: var(--text-em); }
 
-  /* SECTION LABELS */
   .section-tag {
     display: inline-block;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.55rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: #b98ee4;
-    background: rgba(185,142,228,0.07);
-    border: 1px solid rgba(185,142,228,0.18);
+    color: var(--accent);
+    background: var(--accent-low);
+    border: 1px solid var(--accent-mid);
     border-radius: 2px;
     padding: 0.18rem 0.55rem;
     margin-bottom: 0.5rem;
   }
 
-  /* UL / OL */
-  ul, ol {
-    margin: 0.8rem 0 0.8rem 1.5rem;
-    color: #ccc8dc;
-  }
-  li {
-    margin-bottom: 0.35rem;
-  }
+  ul, ol { margin: 0.8rem 0 0.8rem 1.5rem; color: var(--text); }
+  li { margin-bottom: 0.35rem; }
 
-  /* MATH inline */
   .math {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.88rem;
-    color: #d9baff;
+    color: var(--text-h2);
   }
 
-  /* FOOTER */
   footer {
     margin-top: 4rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(255,255,255,0.07);
+    border-top: 1px solid var(--border);
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.58rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #4e4a62;
+    color: var(--text-footer);
     text-align: center;
   }
 
@@ -236,10 +332,20 @@
     table { font-size: 0.78rem; }
     th, td { padding: 0.5rem 0.6rem; }
     pre { font-size: 0.7rem; }
+    .theme-toggle { top: 0.7rem; right: 0.7rem; }
   }
 </style>
 </head>
 <body>
+
+<!-- TOGGLE -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+  <span class="toggle-icon icon-moon">☽</span>
+  <div class="toggle-track"><div class="toggle-thumb"></div></div>
+  <span class="toggle-icon icon-sun">☀</span>
+  <span class="toggle-label" id="toggleLabel">Dark</span>
+</button>
+
 <div class="wrapper">
 
   <!-- VIDEO -->
@@ -675,7 +781,7 @@ V  (governance)</pre>
   <p>Level V → I: In fact, ad this as the final "fifth" domain:</p>
   <p><span class="math">θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²,λ,ε) → γ|ε_FGT|² → L(θᵗ⁺¹)</span></p>
   <p>Remember that FGT is federated ground truth. ε_FGT = y_pred - y_obs</p>
-  <p>And all the <a href="https://ukubona-llc.github.io/bias-weights/">neuron</a> doesn't show is the backprop / feedback, feel me????? yo!!!! very impressive that your wrong arrangement of info order reveals just how robust the correct one is :) Services (or an enterprise) &gt;&gt; Person or anything else intellectually</p>
+  <p>And all the <a href="https://abikesa.github.io/bias-weights/">neuron</a> doesn't show is the backprop / feedback, feel me????? yo!!!! very impressive that your wrong arrangement of info order reveals just how robust the correct one is :) Services (or an enterprise) &gt;&gt; Person or anything else intellectually</p>
 
   <hr>
 
@@ -747,5 +853,26 @@ V  (governance)</pre>
   </footer>
 
 </div>
+
+<script>
+  const html = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const label = document.getElementById('toggleLabel');
+
+  // Restore saved preference
+  const saved = localStorage.getItem('ukubona-theme');
+  if (saved) {
+    html.setAttribute('data-theme', saved);
+    label.textContent = saved === 'dark' ? 'Dark' : 'Light';
+  }
+
+  btn.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    label.textContent = next === 'dark' ? 'Dark' : 'Light';
+    localStorage.setItem('ukubona-theme', next);
+  });
+</script>
 </body>
 </html>
